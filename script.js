@@ -138,6 +138,7 @@
     window.addEventListener("mouseup", onEnd);
     window.addEventListener("touchend", onEnd);
   })();
+
   function loadPredefinedBackground() {
     const img = new Image();
     img.onload = () => {
@@ -180,7 +181,7 @@
 
 The first generations of humans depended on smell to build maps of their surroundings and remember where they had been. Today we don't need smell to know where we are, but if we lose it we feel adrift and confused.
 
-Also, research suggests there is a **link between loss of smell and Alzheimer's disease.** The strange part is that scientists think they can delay the disease's progression by exposing patients to smells from their past — called **"reminiscence therapy"**. It isn't proven yet.
+Also, research suggests there is a ##link between loss of smell and Alzheimer's disease.## The strange part is that scientists think they can delay the disease's progression by exposing patients to smells from their past — called **"reminiscence therapy"**. It isn't proven yet.
 
 ++Olfactory System Plasticity++
 
@@ -190,7 +191,7 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
 
 اعتمدت الأجيال الأولى من البشر على الشم لبناء خرائط لمحيطهم وتذكر الأماكن التي زاروها: في يومنا هذا، لا نحتاج إلى الشم لمعرفة مكاننا، ولكن إذا فقدنا حاسة الشم فسوف نشعر بالضياع والارتباك.
 
-أيضاً، يعتقد الباحثون أن هناك **صلة بين فقدان حاسة الشم ومرض ألزهايمر:** ويقترحون أنه إذا فقد الشخص القدرة على التعرف على الروائح، فقد يصبح مريضاً بهذا المرض بعد سنوات. ويسمى العلاج التجريبي **"العلاج بالذكريات"**.
+أيضاً، يعتقد الباحثون أن هناك ##صلة بين فقدان حاسة الشم ومرض ألزهايمر:## ويقترحون أنه إذا فقد الشخص القدرة على التعرف على الروائح، فقد يصبح مريضاً بهذا المرض بعد سنوات. ويسمى العلاج التجريبي **"العلاج بالذكريات"**.
 
 ++لدونة الجهاز الشمي++
 
@@ -210,7 +211,7 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
   });
   el("script").value = EXAMPLE_EN;
 
-  const INLINE_RE = /(\*\*.+?\*\*|\+\+.+?\+\+|~~.+?~~)/gs;
+  const INLINE_RE = /(\*\*.+?\*\*|\+\+.+?\+\+|~~.+?~~|##.+?##)/gs;
 
   function parseInline(text) {
     const runs = [];
@@ -235,6 +236,13 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
         token.length >= 4
       ) {
         style = "small";
+        content = token.slice(2, -2);
+      } else if (
+        token.startsWith("##") &&
+        token.endsWith("##") &&
+        token.length >= 4
+      ) {
+        style = "customGreen";
         content = token.slice(2, -2);
       }
       for (const word of content.split(/\s+/)) {
@@ -263,6 +271,8 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
   function sizeFor(style) {
     if (style === "big") return parseFloat(el("bigSize").value) || 46;
     if (style === "small") return parseFloat(el("smallSize").value) || 20;
+    if (style === "customGreen")
+      return parseFloat(el("customGreenSize")?.value) || 24;
     return parseFloat(el("baseSize").value) || 28;
   }
 
@@ -282,11 +292,18 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
           : "'EnFontSmall', sans-serif";
     }
 
-    const weight = style === "bold" || style === "big" ? "700" : "400";
+    const weight =
+      style === "bold" || style === "big" || style === "customGreen"
+        ? "700"
+        : "400";
     return `${weight} ${sizeFor(style)}px ${fontFamily}`;
   }
 
   function colorFor(style) {
+    if (style === "customGreen") {
+      const elGreen = el("colorCustomGreen");
+      return elGreen ? elGreen.value : "#4e7a2c";
+    }
     if (style === "bold")
       return el("lockBold").checked
         ? el("colorNormal").value
@@ -577,7 +594,6 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
 
     loadPredefinedBackground();
 
-    // Render immediately using the default script and the same custom fonts.
     requestAnimationFrame(() => {
       setTimeout(generate, 50);
     });
