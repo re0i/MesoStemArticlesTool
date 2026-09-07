@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Articles' Designing Tool | MesoStem</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <img
+          src="mesostem-logo.png"
+          alt="MesoStem Logo"
+          onerror="this.style.display = 'none'"
+        />
+        <div>
+          <h1>Articles' <span>Designing Tool</span></h1>
+          <div class="brand-sub">A dedicated tool for the MesoStem team</div>
+        </div>
+      </div>
+      <div class="license-notice">
+        This tool is exclusively for the MesoStem team and may not be used,
+        copied, or distributed without explicit authorization.
+      </div>
+    </header>
+
+    <div class="app">
+      <aside class="panel">
+        <div class="section">
+          <h2>Text Box (px)</h2>
+          <div class="row">
+            <div>
+              <label>X</label><input type="number" id="boxX" value="132" />
+            </div>
+            <div>
+              <label>Y</label><input type="number" id="boxY" value="192" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Width</label><input type="number" id="boxW" value="810" />
+            </div>
+            <div>
+              <label>Height</label><input type="number" id="boxH" value="966" />
+            </div>
+          </div>
+          <p class="hint">
+            Drag the dashed box on the canvas to move it, or its corners to
+            resize.
+          </p>
+        </div>
+
+        <div class="section">
+          <h2>Language &amp; Layout</h2>
+          <div class="row">
+            <div>
+              <label>Language</label>
+              <select id="lang">
+                <option value="en">English (LTR)</option>
+                <option value="ar">Arabic (RTL)</option>
+              </select>
+            </div>
+            <div>
+              <label>Align</label>
+              <select id="align">
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+              </select>
+            </div>
+          </div>
+          <div class="checkline">
+            <input type="checkbox" id="justify" /> Justify (stretch lines to box
+            width)
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Sizes (px)</h2>
+          <div class="row">
+            <div>
+              <label>Base</label
+              ><input type="number" id="baseSize" value="28" />
+            </div>
+            <div>
+              <label>Big</label><input type="number" id="bigSize" value="46" />
+            </div>
+            <div>
+              <label>Small</label
+              ><input type="number" id="smallSize" value="20" />
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Colors</h2>
+          <div class="row">
+            <div>
+              <label>Normal</label
+              ><input type="color" id="colorNormal" value="#1a1a1a" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <div class="checkline">
+                <input type="checkbox" id="lockBold" /> Bold = Normal
+              </div>
+              <input type="color" id="colorBold" value="#4e7a2c" disabled />
+            </div>
+            <div>
+              <div class="checkline">
+                <input type="checkbox" id="lockBig" /> Big = Normal
+              </div>
+              <input type="color" id="colorBig" value="#022f64" disabled />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <div class="checkline">
+                <input type="checkbox" id="lockSmall" checked /> Small = Normal
+              </div>
+              <input type="color" id="colorSmall" value="#1a1a1a" disabled />
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Spacing</h2>
+          <div class="row">
+            <div>
+              <label>Line Spacing</label
+              ><input type="number" id="lineSpacing" value="1.35" step="0.05" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Heading Top Space (px)</label
+              ><input type="number" id="headingTopSpace" value="24" />
+            </div>
+            <div>
+              <label>Heading Gap (px)</label
+              ><input type="number" id="headingSpacing" value="10" />
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>Body Gap (px)</label
+              ><input type="number" id="bodySpacing" value="20" />
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2>Script</h2>
+          <textarea id="script" spellcheck="false"></textarea>
+          <div class="btn-row" style="margin-top: 8px">
+            <button class="btn btn-small" id="loadEn">Load EN Example</button>
+            <button class="btn btn-small" id="loadAr">Load AR Example</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" id="generateBtn">Generate Pages</button>
+      </aside>
+
+      <main class="workspace">
+        <div class="canvas-stage">
+          <div class="canvas-wrap" id="canvasWrap">
+            <canvas id="stageCanvas" width="1080" height="1350"></canvas>
+            <div class="box-overlay" id="boxOverlay">
+              <div class="handle nw" data-h="nw"></div>
+              <div class="handle ne" data-h="ne"></div>
+              <div class="handle sw" data-h="sw"></div>
+              <div class="handle se" data-h="se"></div>
+            </div>
+          </div>
+        </div>
+        <div class="status" id="statusLine"></div>
+        <div class="pages" id="pagesOutput"></div>
+      </main>
+    </div>
+    <div class="footer-note">
+      © MesoStem — Internal use only. Unauthorized use is prohibited.
+    </div>
+  </body>
+</html>
