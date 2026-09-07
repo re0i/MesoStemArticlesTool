@@ -85,14 +85,10 @@ project/
 ├── mesostem-logo.png
 │
 └── fonts/
-    ├── ArFontBig.otf
     ├── ArFontBig.ttf
     ├── ArFontSmall.otf
-    ├── ArFontSmall.ttf
     ├── EnFontBig.otf
-    ├── EnFontBig.ttf
-    ├── EnFontSmall.otf
-    └── EnFontSmall.ttf
+    └── EnFontSmall.otf
 ```
 
 ---
