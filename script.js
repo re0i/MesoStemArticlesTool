@@ -1,9 +1,12 @@
 (function () {
   "use strict";
-  const DEFAULT_BG_PATH = "background.png";
+
+  const DEFAULT_BG_EN = "background_en.png";
+  const DEFAULT_BG_AR = "background_ar.png";
 
   const state = {
     bgImage: null,
+    currentBgPath: "",
     box: { x: 132, y: 192, w: 810, h: 966 },
   };
 
@@ -139,23 +142,29 @@
     window.addEventListener("touchend", onEnd);
   })();
 
-  function loadPredefinedBackground() {
+  function loadBackgroundForLanguage(lang, callback) {
+    const bgPath = lang === "ar" ? DEFAULT_BG_AR : DEFAULT_BG_EN;
+    if (state.currentBgPath === bgPath && state.bgImage) {
+      if (callback) callback();
+      return;
+    }
+
     const img = new Image();
     img.onload = () => {
       state.bgImage = img;
+      state.currentBgPath = bgPath;
       redrawStage();
-      setStatus("Background loaded successfully.");
-      generate();
+      setStatus(`Background (${bgPath}) loaded successfully.`);
+      if (callback) callback();
     };
     img.onerror = () => {
-      setStatus(
-        "Failed to load predefined background (" + DEFAULT_BG_PATH + ").",
-        true,
-      );
+      setStatus(`Failed to load background (${bgPath}).`, true);
+      state.bgImage = null;
+      state.currentBgPath = "";
       redrawStage();
-      generate();
+      if (callback) callback();
     };
-    img.src = DEFAULT_BG_PATH;
+    img.src = bgPath;
   }
 
   function wireLock(lockId, colorId) {
@@ -173,6 +182,9 @@
     const isAr = el("lang").value === "ar";
     el("align").value = isAr ? "right" : "left";
     el("justify").checked = isAr;
+    loadBackgroundForLanguage(el("lang").value, () => {
+      generate();
+    });
   });
 
   window.addEventListener("resize", redrawStage);
@@ -202,12 +214,14 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
     el("lang").value = "en";
     el("align").value = "left";
     el("justify").checked = false;
+    loadBackgroundForLanguage("en", () => generate());
   });
   el("loadAr").addEventListener("click", () => {
     el("script").value = EXAMPLE_AR;
     el("lang").value = "ar";
     el("align").value = "right";
     el("justify").checked = true;
+    loadBackgroundForLanguage("ar", () => generate());
   });
   el("script").value = EXAMPLE_EN;
 
@@ -438,6 +452,30 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
     }
   }
 
+  function drawPageNumber(ctx, pageIndex, W, H, isAr, box) {
+    const pageNum = (pageIndex + 2).toString().padStart(2, "0");
+    const fontSize = sizeFor("big");
+
+    ctx.font = `400 ${fontSize}px 'EnFontSmall', sans-serif`;
+
+    ctx.fillStyle = colorFor("big");
+    ctx.textBaseline = "top";
+
+    const posY = 1247.3;
+
+    if (isAr) {
+      const posX = W - 981.5;
+      ctx.textAlign = "left";
+      ctx.direction = "ltr";
+      ctx.fillText(pageNum, posX, posY);
+    } else {
+      const posX = 981.5;
+      ctx.textAlign = "left";
+      ctx.direction = "ltr";
+      ctx.fillText(pageNum, posX, posY);
+    }
+  }
+
   function makePageCanvas(w, h) {
     const c = document.createElement("canvas");
     c.width = w;
@@ -506,6 +544,7 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
 
       if (cursor + lineH > bottom) {
         if (cursor > top) {
+          drawPageNumber(ctx, pages.length, W, H, isAr, b);
           pages.push(canvas);
           ({ canvas, ctx } = makePageCanvas(W, H));
           cursor = top;
@@ -533,7 +572,9 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
       }
     });
 
+    drawPageNumber(ctx, pages.length, W, H, isAr, b);
     pages.push(canvas);
+
     if (!warned) setStatus(pages.length + " page(s) generated.");
     renderPageCards(pages);
   }
@@ -592,10 +633,10 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
       console.warn("Some custom fonts could not be loaded.", error);
     }
 
-    loadPredefinedBackground();
-
-    requestAnimationFrame(() => {
-      setTimeout(generate, 50);
+    loadBackgroundForLanguage(el("lang").value, () => {
+      requestAnimationFrame(() => {
+        setTimeout(generate, 50);
+      });
     });
   }
 
