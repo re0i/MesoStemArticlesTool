@@ -464,6 +464,7 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
     const posY = 1247.3;
     const posX = 981.5;
 
+    ctx.textAlign = "left";
     ctx.fillText(pageNum, posX, posY);
   }
 
