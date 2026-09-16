@@ -546,6 +546,8 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
         }
       }
 
+      const shouldJustify = isHeading ? false : !isLast;
+
       drawLine(
         ctx,
         line,
@@ -553,7 +555,7 @@ In mouse experiments, researchers paired a benzene smell with a small foot shock
         right,
         cursor,
         spaceWidth,
-        justify && !isLast,
+        shouldJustify,
         align,
         isAr,
       );
